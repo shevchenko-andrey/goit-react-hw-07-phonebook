@@ -5,7 +5,7 @@ import { Formik, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import toast from 'react-hot-toast';
 import { nanoid } from 'nanoid';
-import { getContacts } from '../../redux/selectors';
+// import { getContacts } from '../../redux/selectors';
 import 'yup-phone';
 
 import {
@@ -20,17 +20,17 @@ import {
 
 const schema = yup.object().shape({
   name: yup.string().required().min(2).max(20),
-  number: yup.string().phone().required(),
+  phone: yup.string().phone().required(),
 });
 
 const ContactForm = () => {
-  const contacts = useSelector(getContacts);
+  const contacts = [{ name: 'ff', phone: '5' }];
   const dispatch = useDispatch();
   const loginInputId = useRef(nanoid());
   const telInputId = useRef(nanoid());
 
   const handleSubmit = (values, { resetForm }) => {
-    const { name, number } = values;
+    const { name, phone } = values;
 
     const isDuplicated = contacts.find(
       contacts => contacts.name.toLowerCase() === name.toLowerCase()
@@ -47,7 +47,7 @@ const ContactForm = () => {
 
   return (
     <Formik
-      initialValues={{ name: '', number: '' }}
+      initialValues={{ name: '', phone: '' }}
       validationSchema={schema}
       onSubmit={handleSubmit}
     >
@@ -63,7 +63,7 @@ const ContactForm = () => {
           <label htmlFor={telInputId.current}>Number</label>
           <div>
             <InputForm id={telInputId.current} name="number" type="tel" />
-            <ErrorMessage name="number" render={formError} />
+            <ErrorMessage name="phone" render={formError} />
           </div>
         </PhoneWrapper>
         <Button type="submit">Add contact</Button>

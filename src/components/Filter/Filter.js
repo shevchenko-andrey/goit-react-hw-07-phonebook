@@ -7,17 +7,14 @@ import { update } from '../../redux/filterSlice';
 
 function Filter() {
   const dispatch = useDispatch();
-  const filter = useSelector(state => getFilter);
+  const filter = useSelector(state => getFilter(state));
   const onChange = ({ target: { value } }) =>
     dispatch(update(value.toLowerCase()));
 
   return (
     <FilterContact>
       <FilterDescription>Find contact by name</FilterDescription>
-      <Input
-        value={filter}
-        onChange={({ target: { value } }) => dispatch(update(value))}
-      />
+      <Input value={filter} onChange={onChange} />
     </FilterContact>
   );
 }
