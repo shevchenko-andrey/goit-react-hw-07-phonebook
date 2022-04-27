@@ -1,12 +1,12 @@
-import { useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Formik, ErrorMessage } from "formik";
-import { itemSlice } from "../../redux/contactsSlice";
-import * as yup from "yup";
-import toast from "react-hot-toast";
-import { nanoid } from "nanoid";
-import { getContacts } from "../../redux/selectors";
-import "yup-phone";
+import { useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Formik, ErrorMessage } from 'formik';
+// import { itemSlice } from "../../redux/contactsSlice";
+import * as yup from 'yup';
+import toast from 'react-hot-toast';
+import { nanoid } from 'nanoid';
+import { getContacts } from '../../redux/selectors';
+import 'yup-phone';
 
 import {
   FormText,
@@ -14,9 +14,9 @@ import {
   InputForm,
   FormStyled,
   PhoneWrapper,
-} from "./Form.styled";
+} from './Form.styled';
 
-const { add } = itemSlice.actions;
+// const { add } = itemSlice.actions;
 
 const schema = yup.object().shape({
   name: yup.string().required().min(2).max(20),
@@ -33,21 +33,21 @@ const ContactForm = () => {
     const { name, number } = values;
 
     const isDuplicated = contacts.find(
-      (contacts) => contacts.name.toLowerCase() === name.toLowerCase()
+      contacts => contacts.name.toLowerCase() === name.toLowerCase()
     );
 
     if (isDuplicated) {
       toast.error(`${name} is already in contacts`);
       return;
     }
-    dispatch(add({ name, number, id: nanoid() }));
+    // dispatch(add({ name, number, id: nanoid() }));
     resetForm();
   };
-  const formError = (message) => <FormText>{message}</FormText>;
+  const formError = message => <FormText>{message}</FormText>;
 
   return (
     <Formik
-      initialValues={{ name: "", number: "" }}
+      initialValues={{ name: '', number: '' }}
       validationSchema={schema}
       onSubmit={handleSubmit}
     >
