@@ -1,12 +1,12 @@
 import { useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Formik, ErrorMessage } from 'formik';
-// import { itemSlice } from "../../redux/contactsSlice";
 import * as yup from 'yup';
-import toast from 'react-hot-toast';
 import { nanoid } from 'nanoid';
-// import { getContacts } from '../../redux/selectors';
-import 'yup-phone';
+import { showErrorToast, showPromiseToast } from './formToasts';
+import {
+  useAddContactMutation,
+  useGetContactsQuery,
+} from '../../redux/contactsApi';
 
 import {
   FormText,
@@ -16,31 +16,32 @@ import {
   PhoneWrapper,
 } from './Form.styled';
 
-// const { add } = itemSlice.actions;
+import 'yup-phone';
 
 const schema = yup.object().shape({
   name: yup.string().required().min(2).max(20),
-  phone: yup.string().phone().required(),
+  phone: yup.string().phone().required('A phone number is required'),
 });
 
 const ContactForm = () => {
-  const contacts = [{ name: 'ff', phone: '5' }];
-  const dispatch = useDispatch();
+  const { data } = useGetContactsQuery();
+  const [addContact] = useAddContactMutation();
   const loginInputId = useRef(nanoid());
   const telInputId = useRef(nanoid());
 
   const handleSubmit = (values, { resetForm }) => {
     const { name, phone } = values;
 
-    const isDuplicated = contacts.find(
+    const isDuplicated = data.find(
       contacts => contacts.name.toLowerCase() === name.toLowerCase()
     );
 
     if (isDuplicated) {
-      toast.error(`${name} is already in contacts`);
+      showErrorToast(name);
       return;
     }
-    // dispatch(add({ name, number, id: nanoid() }));
+    const response = addContact({ name, phone });
+    showPromiseToast(response);
     resetForm();
   };
   const formError = message => <FormText>{message}</FormText>;
@@ -60,9 +61,9 @@ const ContactForm = () => {
           </div>
         </div>
         <PhoneWrapper>
-          <label htmlFor={telInputId.current}>Number</label>
+          <label htmlFor={telInputId.current}>Phone</label>
           <div>
-            <InputForm id={telInputId.current} name="number" type="tel" />
+            <InputForm id={telInputId.current} name="phone" type="tel" />
             <ErrorMessage name="phone" render={formError} />
           </div>
         </PhoneWrapper>
